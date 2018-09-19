@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd src/test
+node cuke-watcher.js

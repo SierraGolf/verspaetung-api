@@ -1,0 +1,17 @@
+{
+  "name": "verspaetung-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Sebastian Gröbler",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "express": "4.16.3",
+    "moment": "^2.22.2",
+    "underscore": "1.9.1"
+  },
+  "devDependencies": {
+    "supervisor": "0.12.0"
+  }
+}
