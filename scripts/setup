@@ -1,0 +1,11 @@
+#!/bin/bash
+
+pushd src/main
+  rm -rf ./node_modules
+  npm install
+popd
+
+pushd src/test
+  rm -rf ./node_modules
+  npm install
+popd

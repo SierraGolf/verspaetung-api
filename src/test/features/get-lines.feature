@@ -1,37 +1,74 @@
-Feature: Get lines
+Feature: Get lines for time and location
+
 
   Scenario: Validate that timestamp is a required parameter
     When the get lines endpoint is called with the following parameters
       | x | y |
       | 1 | 1 |
     Then the get lines response is expected to have the status "400"
-    And the get lines response is expected to have the error "Missing required parameter: timestamp"
+    And the get lines response is expected to have the error "Missing required query parameter: timestamp"
+
+
+  Scenario Outline: Validate that timestamp is formatted correctly
+    When the get lines endpoint is called with the following parameters
+      | timestamp   | x | y |
+      | <timestamp> | 1 | 1 |
+    Then the get lines response is expected to have the status "400"
+    And the get lines response is expected to have the error "Wrong format of query parameter: timestamp. Expected format is HH:mm:ss"
+
+    Examples:
+      | timestamp |
+      | xx:yy:zz  |
+      | 10:00     |
+      | 100:00:00 |
+      | 1000      |
+      | 10;00;00  |
+
 
   Scenario: Validate that x is a required parameter
     When the get lines endpoint is called with the following parameters
       | timestamp | y |
       | 10:00:00  | 1 |
     Then the get lines response is expected to have the status "400"
-    And the get lines response is expected to have the error "Missing required parameter: x"
+    And the get lines response is expected to have the error "Missing required query parameter: x"
+
+
+  Scenario: Validate that x is a number
+    When the get lines endpoint is called with the following parameters
+      | timestamp | x | y |
+      | 10:00:00  | a | 1 |
+    Then the get lines response is expected to have the status "400"
+    And the get lines response is expected to have the error "Wrong format of query parameter: x. It must be an integer."
+
 
   Scenario: Validate that y is a required parameter
     When the get lines endpoint is called with the following parameters
       | timestamp | x |
       | 10:00:00  | 1 |
     Then the get lines response is expected to have the status "400"
-    And the get lines response is expected to have the error "Missing required parameter: y"
+    And the get lines response is expected to have the error "Missing required query parameter: y"
 
-  Scenario: Get no line because there is no match by time
+
+  Scenario: Validate that y is a number
     When the get lines endpoint is called with the following parameters
       | timestamp | x | y |
-      | 10:00:00  | 1 | 1 |
-    Then the get lines response is expected to have the status "404"
-    And the get lines response is expected to have the error "Could not find line for the given coordinates and time."
+      | 10:00:00  | 1 | a |
+    Then the get lines response is expected to have the status "400"
+    And the get lines response is expected to have the error "Wrong format of query parameter: y. It must be an integer."
+
 
   Scenario: Get no line because there is no match by coordinate
     When the get lines endpoint is called with the following parameters
       | timestamp | x  | y  |
       | 10:01:00  | 12 | 12 |
+    Then the get lines response is expected to have the status "404"
+    And the get lines response is expected to have the error "Could not find line for the given coordinates."
+
+
+  Scenario: Get no line because there is no match by time
+    When the get lines endpoint is called with the following parameters
+      | timestamp | x | y |
+      | 10:00:00  | 1 | 1 |
     Then the get lines response is expected to have the status "404"
     And the get lines response is expected to have the error "Could not find line for the given coordinates and time."
 

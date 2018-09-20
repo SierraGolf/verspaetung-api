@@ -1,0 +1,14 @@
+#!/bin/bash
+
+node src/main/server.js &
+
+serverId=$!
+
+cd src/test
+./node_modules/.bin/cucumber-js --require step_definitions features
+
+testsReturnCode=$?
+
+kill $serverId
+
+exit $testsReturnCode

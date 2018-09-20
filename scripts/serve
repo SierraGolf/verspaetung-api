@@ -1,3 +1,3 @@
 #!/bin/bash
 
-src/main/node_modules/supervisor/lib/cli-wrapper.js -e 'js,json,hbs' node src/main/server.js
+src/main/node_modules/supervisor/lib/cli-wrapper.js -e 'js,json' node src/main/server.js

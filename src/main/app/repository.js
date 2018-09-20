@@ -1,179 +1,44 @@
-// TODO read from csv and convert format
+const _ = require('underscore');
+
+let lines;
+let stopTimes;
+let stops;
+let delays;
 
 module.exports = {
     getLines() {
-        return [
-            {
-                id: 0,
-                name: 'M4'
-            },
-            {
-                id: 1,
-                name: '200'
-            },
-            {
-                id: 2,
-                name: 'S75'
-            }
-        ]
+        if (!lines) {
+            lines = readCsv('lines.csv', (line) => ({id: parseInt(line.line_id), name: line.line_name}));
+        }
+
+        return lines;
     },
     getStopTimes() {
-        return [
-            {
-                lineId: 0,
-                stopId: 0,
-                time: '10:00:00'
-            },
-            {
-                lineId: 0,
-                stopId: 1,
-                time: '10:02:00'
-            },
-            {
-                lineId: 0,
-                stopId: 2,
-                time: '10:05:00'
-            },
-            {
-                lineId: 0,
-                stopId: 3,
-                time: '10:07:00'
-            },
-            {
-                lineId: 0,
-                stopId: 4,
-                time: '10:09:00'
-            },
-            {
-                lineId: 1,
-                stopId: 5,
-                time: '10:01:00'
-            },
-            {
-                lineId: 1,
-                stopId: 6,
-                time: '10:04:00'
-            },
-            {
-                lineId: 1,
-                stopId: 7,
-                time: '10:06:00'
-            },
-            {
-                lineId: 1,
-                stopId: 3,
-                time: '10:08:00'
-            },
-            {
-                lineId: 1,
-                stopId: 8,
-                time: '10:10:00'
-            },
-            {
-                lineId: 2,
-                stopId: 3,
-                time: '10:08:00'
-            },
-            {
-                lineId: 2,
-                stopId: 9,
-                time: '10:09:00'
-            },
-            {
-                lineId: 2,
-                stopId: 4,
-                time: '10:11:00'
-            },
-            {
-                lineId: 2,
-                stopId: 10,
-                time: '10:13:00'
-            },
-            {
-                lineId: 2,
-                stopId: 11,
-                time: '10:15:00'
-            }
-        ]
+        if (!stopTimes) {
+            stopTimes = readCsv('stop_times.csv', (stopTime) => ({lineId: parseInt(stopTime.line_id), stopId: parseInt(stopTime.stop_id), time: stopTime.time}));
+        }
+
+        return stopTimes;
     },
     getStops() {
-        return [
-            {
-                id: 0,
-                x: 1,
-                y: 1
-            },
-            {
-                id: 1,
-                x: 1,
-                y: 4
-            },
-            {
-                id: 2,
-                x: 1,
-                y: 7
-            },
-            {
-                id: 3,
-                x: 2,
-                y: 9
-            },
-            {
-                id: 4,
-                x: 3,
-                y: 11
-            },
-            {
-                id: 5,
-                x: 3,
-                y: 1
-            },
-            {
-                id: 6,
-                x: 3,
-                y: 4
-            },
-            {
-                id: 7,
-                x: 3,
-                y: 7
-            },
-            {
-                id: 8,
-                x: 1,
-                y: 10
-            },
-            {
-                id: 9,
-                x: 2,
-                y: 12
-            },
-            {
-                id: 10,
-                x: 4,
-                y: 9
-            },
-            {
-                id: 11,
-                x: 5,
-                y: 7
-            }
-        ]
+        if (!stops) {
+            stops = readCsv('stops.csv', (stop) => ({id: parseInt(stop.stop_id), x: parseInt(stop.x), y: parseInt(stop.y)}));
+        }
+
+        return stops;
     },
     getDelays() {
-        return [
-            {
-                lineName: 'M4',
-                delay: 1
-            },
-            {
-                lineName: '200',
-                delay: 2
-            },
-            {
-                lineName: 'S75',
-                delay: 10
-            }
-        ]
+        if (!delays) {
+            delays = readCsv('delays.csv', (delay) => ({lineName: delay.line_name, delay: parseInt(delay.delay)}));
+        }
+
+        return delays;
     }
 };
+
+// TODO reading files synchronously is something you usually don't do in nodejs, but then again using a csv as a database is also just a temp solution :)
+function readCsv(fileName, converter) {
+    const loader = require('csv-load-sync');
+    const rawData = loader(__dirname + '/../data/' + fileName);
+    return _.map(rawData, converter);
+}

@@ -1,8 +1,7 @@
-const express        = require('express');
-const app            = express();
+const express = require('express');
+const app = express();
+const initializeResources = require('./app/resources');
 
-
-// TODO this sucks
-require('./app/resources')(app);
+initializeResources(app);
 
 app.listen('8081');

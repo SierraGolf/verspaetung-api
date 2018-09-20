@@ -1,5 +1,7 @@
-const initializeGetLineResource = require('./get-lines');
+const initializeLinesResource = require('./get-lines');
+const initializeDelayResource = require('./get-delay');
 
 module.exports = (app) => {
-    initializeGetLineResource(app);
+    initializeLinesResource(app);
+    initializeDelayResource(app);
 };

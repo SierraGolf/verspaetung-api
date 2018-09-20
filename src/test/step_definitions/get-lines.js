@@ -36,14 +36,16 @@ Then(/^the get lines response is expected to have the status "([^"]*)"$/, (statu
 
 Then(/^the get lines response is expected to contain the following data$/, (data) => {
 
-    const expectedData = data.hashes()[0];
-    const actualData = linesResponse.body[0];
+    const hashes = data.hashes();
+    expect(linesResponse.body.length).to.be.equal(hashes.length);
 
-    // TODO assert all not just the first
+    for (let i = 0; i < hashes.length; i++) {
+        const expectedData = hashes[i];
+        const actualData = linesResponse.body[i];
 
-    expect(linesResponse.body.length).to.be.equal(data.hashes().length);
-    expect(actualData.id).to.be.equal(parseInt(expectedData.id));
-    expect(actualData.name).to.be.equal(expectedData.name);
+        expect(actualData.id).to.be.equal(parseInt(expectedData.id));
+        expect(actualData.name).to.be.equal(expectedData.name);
+    }
 });
 
 Then(/^the get lines response is expected to have the error "([^"]*)"$/, (error) => {
